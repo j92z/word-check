@@ -1,0 +1,197 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Words Check API DOC",
+        "contact": {
+            "name": "cixn",
+            "url": "https://blog.zhangziwen.cn",
+            "email": "zeco11320@163.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/ping": {
+            "get": {
+                "description": "test service useful",
+                "tags": [
+                    "Common"
+                ],
+                "summary": "PING TEST",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sensitive_word_service": {
+            "get": {
+                "description": "检查词是否敏感",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Word"
+                ],
+                "summary": "检查词是否敏感",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ldap userid 仅在开发环境需要提供",
+                        "name": "x-ldap-user",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "words",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/http_util.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "info": {
+                                            "$ref": "#/definitions/sensitive_word_service.CheckSensitiveWordResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "添加词",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Word"
+                ],
+                "summary": "添加词",
+                "parameters": [
+                    {
+                        "description": "add word",
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sensitive_word_controller.operateWordParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http_util.HttpResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "移除词",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Word"
+                ],
+                "summary": "移除词",
+                "parameters": [
+                    {
+                        "description": "delete word",
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sensitive_word_controller.operateWordParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http_util.HttpResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "http_util.HttpResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "info": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "sensitive_word_controller.operateWordParam": {
+            "type": "object",
+            "required": [
+                "word"
+            ],
+            "properties": {
+                "word": {
+                    "type": "string"
+                }
+            }
+        },
+        "sensitive_word_service.CheckSensitiveWordResult": {
+            "type": "object",
+            "properties": {
+                "hit_words": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sensitive": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "words": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

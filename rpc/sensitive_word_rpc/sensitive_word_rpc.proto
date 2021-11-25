@@ -1,0 +1,32 @@
+syntax="proto3";
+
+option go_package = "sensitive_words_check/rpc/sensitive_word_rpc";
+package sensitive_word_rpc;
+
+service SensitiveWord {
+  rpc AddSensitiveWord(OperateSensitiveWordRequest) returns (OperateSensitiveWordResponse) {}
+  rpc RemoveSensitiveWord(OperateSensitiveWordRequest) returns (OperateSensitiveWordResponse) {}
+  rpc CheckSensitiveWord(CheckSensitiveWordRequest) returns (CheckSensitiveWordResponse) {}
+}
+
+message OperateSensitiveWordRequest {
+  string word = 1;
+}
+
+message OperateSensitiveWordResponse {
+  bool success = 1;
+}
+
+message CheckSensitiveWordRequest {
+  repeated string words = 1;
+}
+
+message CheckSensitiveWordResponse {
+  message Result {
+    string text = 1;
+    repeated string words = 2;
+    repeated string hit_words = 3;
+    bool sensitive = 4;
+  }
+  repeated Result results = 1;
+}

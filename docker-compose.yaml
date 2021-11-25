@@ -1,0 +1,11 @@
+version: "3"
+services:
+  word-check:
+    container_name: word-check
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+      - "5002:5002"
+

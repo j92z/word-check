@@ -1,0 +1,126 @@
+definitions:
+  http_util.HttpResponse:
+    properties:
+      code:
+        enum:
+        - 0
+        - 1
+        type: integer
+      info: {}
+      message:
+        type: string
+    type: object
+  sensitive_word_controller.operateWordParam:
+    properties:
+      word:
+        type: string
+    required:
+    - word
+    type: object
+  sensitive_word_service.CheckSensitiveWordResult:
+    properties:
+      hit_words:
+        items:
+          type: string
+        type: array
+      sensitive:
+        type: boolean
+      text:
+        type: string
+      words:
+        items:
+          type: string
+        type: array
+    type: object
+info:
+  contact:
+    email: zeco11320@163.com
+    name: cixn
+    url: https://blog.zhangziwen.cn
+  title: Words Check API DOC
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      description: test service useful
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: PING TEST
+      tags:
+      - Common
+  /sensitive_word_service:
+    delete:
+      consumes:
+      - application/json
+      description: 移除词
+      parameters:
+      - description: delete word
+        in: body
+        name: info
+        required: true
+        schema:
+          $ref: '#/definitions/sensitive_word_controller.operateWordParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_util.HttpResponse'
+      summary: 移除词
+      tags:
+      - Word
+    get:
+      description: 检查词是否敏感
+      parameters:
+      - description: ldap userid 仅在开发环境需要提供
+        in: header
+        name: x-ldap-user
+        required: true
+        type: string
+      - in: query
+        items:
+          type: string
+        name: words
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http_util.HttpResponse'
+            - properties:
+                info:
+                  $ref: '#/definitions/sensitive_word_service.CheckSensitiveWordResult'
+              type: object
+      summary: 检查词是否敏感
+      tags:
+      - Word
+    put:
+      consumes:
+      - application/json
+      description: 添加词
+      parameters:
+      - description: add word
+        in: body
+        name: info
+        required: true
+        schema:
+          $ref: '#/definitions/sensitive_word_controller.operateWordParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http_util.HttpResponse'
+      summary: 添加词
+      tags:
+      - Word
+swagger: "2.0"
